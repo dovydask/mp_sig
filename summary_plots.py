@@ -1,9 +1,12 @@
 import numpy as np
+# import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
 import umap
 import umap.plot
+
+# matplotlib.rcParams['text.usetex'] = True
 
 
 # Various global definitions
@@ -81,12 +84,12 @@ def sample_residues(x, y, title, text_annotations=None, plot_names=False, figsiz
         plot_data = np.array([np.mean(x, axis=0),
                               np.mean(y, axis=0),
                               np.mean(x - y, axis=0),
-                              np.mean(np.log2((x + 1)/(y + 1)), axis=0)]).reshape(4, x.shape[1])
+                              np.mean((x + 1)/(y + 1), axis=0)]).reshape(4, x.shape[1])
     else:
         plot_data = np.array([x,
                               y,
                               x - y,
-                              np.log2((x + 1)/(y + 1))]).reshape(4, x.shape[1])
+                              (x + 1)/(y + 1)]).reshape(4, x.shape[1])
 
     ymax = np.max((np.max(plot_data[0]), np.max(plot_data[1])))
     plt.subplots(plot_data.shape[0], 1, figsize=figsize)
@@ -124,7 +127,8 @@ def sample_residues(x, y, title, text_annotations=None, plot_names=False, figsiz
             plt.ylabel("Predicted SBSs", fontsize=20)
             plt.ylim(0, ymax + ymax*0.15)
         if i == 2:
-            plt.ylabel("Difference", fontsize=20)
+            # plt.ylabel("Difference", fontsize=20)
+            plt.ylabel(r'$\delta_{\mathrm{add.}}$', fontsize=25)
             plt.axhline(0, linestyle="--", c="grey")
             ymin2 = np.min(plot_data[2])
             ymax2 = np.max(plot_data[2])
@@ -134,9 +138,11 @@ def sample_residues(x, y, title, text_annotations=None, plot_names=False, figsiz
             ymax3 = np.max(plot_data[3])
             # ylim3 = np.max([np.abs(ymin3), np.abs(ymax3)])
             plt.axhline(0, linestyle="--", c="grey")
-            plt.ylabel("Ratio (log2)", fontsize=20)
+            # plt.ylabel("Ratio", fontsize=20)
+            plt.ylabel(r'$\delta_{\mathrm{mul.}}$', fontsize=25, labelpad=30)
             # plt.ylim(ylim3 - 0.5, ylim3 + 0.5)
             plt.ylim(ymin3 + ymin3*0.15, ymax3 + ymax3*0.15)
+            plt.hlines(1, 0, 96, linestyles="dashed", color="grey")
             ax = plt.gca()
             ax.xaxis.grid(False)
             for k in range(len(mut_xlabs)):
@@ -148,7 +154,7 @@ def sample_residues(x, y, title, text_annotations=None, plot_names=False, figsiz
                          color=mut_type_colors[k], rotation=90, fontsize=15, transform=ax.transAxes)
 
         if text_annotations:
-            plt.text(1, ymax, text_annotations[i], fontsize=20)
+            plt.text(1, ymax, text_annotations[i], fontsize=25, va='top')
 
         plt.margins(x=0.002, y=0.002)
         plt.yticks(fontsize=20)
@@ -240,7 +246,7 @@ def mut_barplot(data, title, ylabel="Mutations", figsize=(20, 4), hline=None,
 
     fig = plt.figure(figsize=figsize)
     plt.bar(range(96), data, color=mut_type_colors)
-    plt.title(title, fontsize=20, pad=50)
+    plt.title(title, fontsize=40, pad=50)
     plt.xticks(range(96), mut_types, rotation=90)
 
     xlabs = plt.gca().get_xticklabels()
@@ -265,8 +271,8 @@ def mut_barplot(data, title, ylabel="Mutations", figsize=(20, 4), hline=None,
         p.set_transform(ax.transAxes)
         p.set_clip_on(False)
         ax.add_patch(p)
-        ax.text(0.5 * (left + right), 0.5 * (bottom + top), channel6[j],
-                color=text_col[j], weight='bold', size=20,
+        ax.text(0.5 * (left + right), 0.495 * (bottom + top), channel6[j],
+                color=text_col[j], weight='bold', size=25,
                 horizontalalignment='center', verticalalignment='center',
                 transform=ax.transAxes)
         ax.margins(x=0.002, y=0.002)
@@ -283,8 +289,8 @@ def mut_barplot(data, title, ylabel="Mutations", figsize=(20, 4), hline=None,
                      color=mut_type_colors[k], rotation=90, fontsize=15, transform=ax.transAxes)
 
     # plt.xlabel("Mutation type")
-    plt.ylabel(ylabel, fontsize=20)
-    plt.yticks(fontsize=20)
+    plt.ylabel(ylabel, fontsize=35)
+    plt.yticks(fontsize=25)
     plt.ylim(ylim)
     plt.tight_layout()
 
