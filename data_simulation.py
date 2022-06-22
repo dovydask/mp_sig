@@ -39,12 +39,15 @@ def generate_data_mul_process(c, mp, N_samples=1000, N_signatures=15, N_channels
             mu = mu.reshape(1, 96)
 
     m = np.dot(x_pre, mu)
+    x2 = multiplier*x_pre/np.mean(m)
+
     p = 1 + c.reshape(-1, 1)*mp.reshape(1, -1)
     lam = multiplier*p*m/np.mean(p*m)
 
     data = np.random.poisson(lam)
     x = multiplier*x_pre/np.mean(p*m)
-
+    
+    np.savetxt(data_path + "{}-x2.txt".format(filename), x2, fmt='%5.1i')
     np.savetxt(data_path + "{}-x_pre.txt".format(filename), x_pre, fmt='%5.1i')
     np.savetxt(data_path + "{}-samples.txt".format(filename), data, fmt='%5.1i')
     np.savetxt(data_path + "{}-mu.txt".format(filename), mu, fmt='%.5f')

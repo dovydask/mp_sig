@@ -140,7 +140,7 @@ def plot_heatmap_with_dendrogram(Z, dists, labels, totals, ctype_cols,
 
 
 def plot_heatmap_with_dendrogram_tri(Z, dists1, dists2, labels, totals,
-                                     ctype_cols, threshold, filename,
+                                     ctype_cols, threshold, filename, dpi,
                                      cluster_labels=False, text_y=-0.075,
                                      vmin=-1, vmax=1):
     """
@@ -250,5 +250,5 @@ def plot_heatmap_with_dendrogram_tri(Z, dists1, dists2, labels, totals,
 
     # plt.tight_layout()
     plt.subplots_adjust(hspace=1)
-    plt.savefig(filename, dpi=100, pad_inches=0)
+    plt.savefig(filename, dpi=dpi, pad_inches=0)
     plt.close()
